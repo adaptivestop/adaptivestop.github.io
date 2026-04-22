@@ -1,9 +1,12 @@
-# SignalStop — research hub
+# AdaptiveStop — research hub
 
-Next.js 14 webapp that serves the SignalStop paper's full research artefact: the
-compiled PDF, all 11 figures, the per-prompt simulator (500 paired prompts across
-Euler / DPM-Solver++ / DDIM), interactive ablation widgets, and the pre-registered
-success-criteria scorecard. Greyscale-first, deployable to Vercel.
+Next.js 14 webapp that serves the AdaptiveStop paper's full research artefact: the
+compiled PDF, all 11 figures, the per-prompt simulator (2,419 Euler-evaluated
+prompts with 476 also paired across DPM-Solver++ and DDIM), interactive ablation
+widgets, and the pre-registered success-criteria scorecard. Greyscale-first,
+statically exported, deployed to GitHub Pages.
+
+**Live:** <https://adaptivestop.github.io>
 
 ## Routes
 
@@ -21,12 +24,12 @@ success-criteria scorecard. Greyscale-first, deployable to Vercel.
 The webapp reads four JSON files from `public/data/`:
 
 - **`core.json`** — meta, headline numbers, criteria, v9-replication deltas
-- **`trajectories.json`** — 500 prompts × 3 schedulers × per-step signals/pickscore/pred/image-URL
+- **`trajectories.json`** — 2,419 prompts × signals/pickscore/pred/image-URL (476 of them also carry DPM-Solver++ and DDIM panels)
 - **`ablations.json`** — τ sweep, group LOO, per-corpus, LR coefficients
 - **`transfer.json`** — cross-scheduler uncalibrated + calibrated metrics + gates
 
 Images (19,994 JPEGs at 256×256) live in a public Cloudflare R2 bucket.
-`trajectories.json` embeds the R2 URLs directly so no server roundtrip is needed.
+`trajectories.json` embeds the R2 URLs directly so no server round-trip is needed.
 
 ## Rebuilding data after new experiments
 
@@ -43,24 +46,26 @@ Both scripts are resumable and idempotent.
 ## Running locally
 
 ```bash
-cd webapp
 npm install
 npm run dev          # http://localhost:3000
+npm run build        # static export -> out/
 ```
 
-## Deploy to Vercel
+## Deploy to GitHub Pages
 
-```bash
-cd webapp
-npx vercel           # first time — login + link
-npx vercel --prod    # production
-```
+The repository `adaptivestop/adaptivestop.github.io` has a GitHub Actions workflow
+at `.github/workflows/pages.yml` that builds and deploys on every push to `main`.
+Requirements (one-time):
 
-The deployment is tiny (~5 MB: code + JSON + figure PDFs + paper PDF).
-All image traffic goes to Cloudflare R2, not Vercel — zero bandwidth impact
-on the free tier.
+1. Repo is **public** (GH Pages free tier requirement).
+2. **Settings → Pages → Source** is set to **GitHub Actions**.
+
+Then every `git push origin main` rebuilds the site. Deployment is tiny
+(~12 MB: code + JSON + figure PDFs + paper PDF). All image traffic goes to
+Cloudflare R2, not GH Pages — zero bandwidth impact.
 
 ## Secrets
 
-R2 credentials live in `webapp/.env.r2` (git-ignored). The public R2 URL is
-committed (it's public by design) but upload credentials are not.
+R2 credentials live in `webapp/.env.r2` on the developer's machine (git-ignored).
+The public R2 URL is committed (it's public by design) but the upload access key
+and secret are not. The deployed site only needs the public URL.
