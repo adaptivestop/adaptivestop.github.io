@@ -1,0 +1,220 @@
+{
+  "protocol": {
+    "tau": 0.8,
+    "calib_n_prompts": 100,
+    "test_n_prompts": 400,
+    "calibration_objective": "max F1(STOP) on CALIB",
+    "t_grid_step": 0.01,
+    "seed": 42
+  },
+  "euler": {
+    "ref_step": 30,
+    "t_star": 0.5,
+    "uncalibrated": {
+      "n_prompts": 389,
+      "n_rows": 1945,
+      "stop_pct": 33.47043701799486,
+      "bal_acc": 0.8531951794528452,
+      "prec_stop": 0.7315175097276264,
+      "rec_stop": 0.8663594470046083,
+      "f1_stop": 0.7932489451476793,
+      "roc_auc": 0.9288207180962829,
+      "avg_stop": 20.089974293059125,
+      "savings_pct": 33.03341902313624,
+      "mean_qloss": 0.4957550951018739,
+      "med_qloss": 0.44434356689453125,
+      "p90_qloss": 1.0088859558105467
+    },
+    "calibrated": {
+      "n_prompts": 389,
+      "n_rows": 1945,
+      "stop_pct": 33.47043701799486,
+      "bal_acc": 0.8531951794528452,
+      "prec_stop": 0.7315175097276264,
+      "rec_stop": 0.8663594470046083,
+      "f1_stop": 0.7932489451476793,
+      "roc_auc": 0.9288207180962829,
+      "avg_stop": 20.089974293059125,
+      "savings_pct": 33.03341902313624,
+      "mean_qloss": 0.4957550951018739,
+      "med_qloss": 0.44434356689453125,
+      "p90_qloss": 1.0088859558105467
+    }
+  },
+  "dpm": {
+    "ref_step": 20,
+    "t_star": 0.07,
+    "uncalibrated": {
+      "n_prompts": 399,
+      "n_rows": 1596,
+      "stop_pct": 2.0050125313283207,
+      "bal_acc": 0.6876598465473146,
+      "prec_stop": 0.031714568880079286,
+      "rec_stop": 1.0,
+      "f1_stop": 0.06147934678194044,
+      "roc_auc": 0.8811940537084398,
+      "avg_stop": 9.573934837092732,
+      "savings_pct": 52.13032581453634,
+      "mean_qloss": 4.911489556009011,
+      "med_qloss": 5.032804489135739,
+      "p90_qloss": 6.970976257324216
+    },
+    "calibrated": {
+      "n_prompts": 399,
+      "n_rows": 1596,
+      "stop_pct": 2.0050125313283207,
+      "bal_acc": 0.7505195012787724,
+      "prec_stop": 0.11585365853658537,
+      "rec_stop": 0.59375,
+      "f1_stop": 0.19387755102040816,
+      "roc_auc": 0.8811940537084398,
+      "avg_stop": 18.345864661654137,
+      "savings_pct": 8.270676691729323,
+      "mean_qloss": 0.8757604154429042,
+      "med_qloss": 0.0,
+      "p90_qloss": 2.931237792968749
+    }
+  },
+  "ddim": {
+    "ref_step": 50,
+    "t_star": 0.6900000000000002,
+    "uncalibrated": {
+      "n_prompts": 386,
+      "n_rows": 1544,
+      "stop_pct": 26.748704663212436,
+      "bal_acc": 0.8213338385752179,
+      "prec_stop": 0.7845744680851063,
+      "rec_stop": 0.7142857142857143,
+      "f1_stop": 0.7477820025348543,
+      "roc_auc": 0.9260955292515785,
+      "avg_stop": 40.259067357512954,
+      "savings_pct": 19.481865284974095,
+      "mean_qloss": 0.2632588450772775,
+      "med_qloss": 0.230832099914549,
+      "p90_qloss": 0.6001005172729474
+    },
+    "calibrated": {
+      "n_prompts": 386,
+      "n_rows": 1544,
+      "stop_pct": 26.748704663212436,
+      "bal_acc": 0.8503627679548194,
+      "prec_stop": 0.6906187624750499,
+      "rec_stop": 0.837772397094431,
+      "f1_stop": 0.7571115973741794,
+      "roc_auc": 0.9260955292515785,
+      "avg_stop": 36.994818652849744,
+      "savings_pct": 26.010362694300518,
+      "mean_qloss": 0.3728352087149348,
+      "med_qloss": 0.3275871276855469,
+      "p90_qloss": 0.7493696212768555
+    }
+  },
+  "by_corpus": [
+    {
+      "scheduler": "Euler",
+      "corpus": "PartiPrompts",
+      "n_prompts": 155,
+      "stop_pct": 36.12903225806451,
+      "f1_stop": 0.8203389830508474,
+      "roc_auc": 0.941161616161616
+    },
+    {
+      "scheduler": "Euler",
+      "corpus": "COCO",
+      "n_prompts": 159,
+      "stop_pct": 30.69182389937107,
+      "f1_stop": 0.7723132969034608,
+      "roc_auc": 0.9242733033828212
+    },
+    {
+      "scheduler": "Euler",
+      "corpus": "DrawBench",
+      "n_prompts": 75,
+      "stop_pct": 33.86666666666667,
+      "f1_stop": 0.7773851590106007,
+      "roc_auc": 0.9153860807721615
+    },
+    {
+      "scheduler": "DPM++",
+      "corpus": "PartiPrompts",
+      "n_prompts": 160,
+      "stop_pct": 2.5,
+      "f1_stop": 0.2127659574468085,
+      "roc_auc": 0.8634815705128206
+    },
+    {
+      "scheduler": "DPM++",
+      "corpus": "COCO",
+      "n_prompts": 160,
+      "stop_pct": 1.09375,
+      "f1_stop": 0.1379310344827586,
+      "roc_auc": 0.8720379146919431
+    },
+    {
+      "scheduler": "DPM++",
+      "corpus": "DrawBench",
+      "n_prompts": 79,
+      "stop_pct": 2.848101265822785,
+      "f1_stop": 0.2272727272727272,
+      "roc_auc": 0.9004705030763662
+    },
+    {
+      "scheduler": "DDIM",
+      "corpus": "PartiPrompts",
+      "n_prompts": 153,
+      "stop_pct": 29.411764705882355,
+      "f1_stop": 0.7904509283819628,
+      "roc_auc": 0.9287680041152262
+    },
+    {
+      "scheduler": "DDIM",
+      "corpus": "COCO",
+      "n_prompts": 159,
+      "stop_pct": 24.056603773584907,
+      "f1_stop": 0.7350427350427351,
+      "roc_auc": 0.9231789334091124
+    },
+    {
+      "scheduler": "DDIM",
+      "corpus": "DrawBench",
+      "n_prompts": 74,
+      "stop_pct": 27.027027027027028,
+      "f1_stop": 0.7311827956989247,
+      "roc_auc": 0.9262152777777778
+    }
+  ],
+  "gates": {
+    "auc": {
+      "DPM++_auc_drop_le_0.03": {
+        "euler_auc": 0.9288207180962829,
+        "target_auc": 0.8811940537084398,
+        "delta": -0.04762666438784302,
+        "tol": -0.03,
+        "pass": false
+      },
+      "DDIM_auc_drop_le_0.05": {
+        "euler_auc": 0.9288207180962829,
+        "target_auc": 0.9260955292515785,
+        "delta": -0.002725188844704407,
+        "tol": -0.05,
+        "pass": true
+      }
+    },
+    "policy": {
+      "DPM++_calibrated_savings_within_15pct_of_euler": {
+        "pass": false
+      },
+      "DPM++_calibrated_mean_qloss_le_2x_euler": {
+        "pass": true,
+        "ratio": 1.7665182347000228
+      },
+      "DDIM_calibrated_savings_within_15pct_of_euler": {
+        "pass": true
+      },
+      "DDIM_calibrated_mean_qloss_le_2x_euler": {
+        "pass": true,
+        "ratio": 0.7520552232313821
+      }
+    }
+  }
+}

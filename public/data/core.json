@@ -1,0 +1,133 @@
+{
+  "meta": {
+    "version": "v10",
+    "tau_default": 0.8,
+    "r2_base": "https://pub-5ad71545908541cdab33f156143eefeb.r2.dev",
+    "seed": 42,
+    "n_prompts_raw": 2499,
+    "n_prompts_pooled": 2419,
+    "schedulers": {
+      "euler": {
+        "full_name": "Euler Discrete",
+        "ref_step": 30,
+        "checkpoints": [
+          5,
+          10,
+          15,
+          20,
+          25,
+          30
+        ]
+      },
+      "dpm": {
+        "full_name": "DPM-Solver++ 2M",
+        "ref_step": 20,
+        "checkpoints": [
+          4,
+          8,
+          12,
+          16,
+          20
+        ]
+      },
+      "ddim": {
+        "full_name": "DDIM",
+        "ref_step": 50,
+        "checkpoints": [
+          10,
+          20,
+          30,
+          40,
+          50
+        ]
+      }
+    },
+    "signals_order": [
+      "cfg_gap_norm",
+      "cfg_gap_cumulative",
+      "x0_mse",
+      "x0_cosine",
+      "cross_attn_entropy",
+      "cross_attn_max",
+      "eps_norm",
+      "eps_norm_delta",
+      "hf_power_ratio",
+      "hf_power_delta"
+    ]
+  },
+  "headline": {
+    "roc_auc": 0.9324817230103608,
+    "roc_auc_ci95": [
+      0.928684102105237,
+      0.9370351899122376
+    ],
+    "f1_stop": 0.7964297974596636,
+    "f1_stop_ci95": [
+      0.7880570457151245,
+      0.8049031108490509
+    ],
+    "bal_acc": 0.856617520522176,
+    "savings_pct": 32.58922419732671,
+    "avg_stop": 20.223232740801983,
+    "mean_qloss": 0.46985962825552813,
+    "med_qloss": 0.4227523803710902,
+    "p90_qloss": 0.9185050964355478,
+    "p95_qloss": 1.1209590911865202,
+    "stop_prevalence_pct": 33.16246382802811
+  },
+  "criteria": {
+    "AUC_pooled_ge_0.92": {
+      "target": 0.92,
+      "measured": 0.9324817230103608,
+      "pass": true
+    },
+    "F1_stop_ge_0.80": {
+      "target": 0.8,
+      "measured": 0.7964297974596636,
+      "pass": false
+    },
+    "savings_ge_30pct": {
+      "target": 30.0,
+      "measured": 32.58922419732671,
+      "pass": true
+    },
+    "p90_qloss_le_0.50": {
+      "target": 0.5,
+      "measured": 0.9185050964355478,
+      "pass": false
+    },
+    "v9_cohort_auc_within_pm0.02_of_0.913": {
+      "target": 0.913,
+      "tol": 0.02,
+      "measured": 0.9131791947388994,
+      "pass": true
+    }
+  },
+  "all_primary_pass": false,
+  "v9_replication": {
+    "v10_measured_tau09": {
+      "n_prompts": 964,
+      "n_rows": 4820,
+      "stop_pct": 19.543568464730292,
+      "bal_acc": 0.8465988662705074,
+      "f1_stop": 0.6672064777327935,
+      "roc_auc": 0.9131791947388994
+    },
+    "v10_measured_tau08": {
+      "n_prompts": 964,
+      "n_rows": 4820,
+      "stop_pct": 34.128630705394194,
+      "bal_acc": 0.8592173850609099,
+      "f1_stop": 0.8047270680922903,
+      "roc_auc": 0.9359186271928776
+    },
+    "v9_reference_tau09": {
+      "roc_auc": 0.913,
+      "f1_stop": 0.661
+    }
+  },
+  "cross_scheduler_summary": {
+    "delta_auc_dpm": -0.04762666438784302,
+    "delta_auc_ddim": -0.002725188844704407
+  }
+}

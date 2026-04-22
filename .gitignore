@@ -1,0 +1,10 @@
+node_modules
+.next
+out
+.DS_Store
+.vercel
+*.log
+.env*.local
+.env.r2
+.env.r2.local
+public/data/trajectories.full.json
