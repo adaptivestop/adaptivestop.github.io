@@ -17,7 +17,7 @@ export default function Nav() {
     <nav className="border-b border-neutral-300 bg-white">
       <div className="max-w-6xl mx-auto px-4 md:px-8 py-3 flex items-center gap-6">
         <Link href="/" className="font-bold tracking-tight text-neutral-900">
-          <span className="mr-2">●</span>SignalStop
+          <span className="mr-2">●</span>AdaptiveStop
         </Link>
         <ul className="flex items-center gap-1 text-sm overflow-x-auto">
           {ITEMS.filter(i => i.href !== "/").map(({ href, label }) => {

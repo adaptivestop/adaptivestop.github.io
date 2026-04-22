@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 
-const BIBTEX = `@misc{gurmessa2026signalstop,
+const BIBTEX = `@misc{gurmessa2026adaptivestop,
   title  = {Learning to Stop: Process-Signal Early Exit for Diffusion Models},
   author = {Gurmessa, Oli and Akram, Pakeeza},
   year   = {2026},
@@ -24,7 +24,7 @@ export default function AboutPage() {
       </section>
 
       <section className="space-y-2">
-        <h2 className="text-lg font-bold">What is SignalStop?</h2>
+        <h2 className="text-lg font-bold">What is AdaptiveStop?</h2>
         <p className="text-[14px] leading-relaxed max-w-3xl text-neutral-800">
           A zero-overhead early-exit policy for text-to-image diffusion. At each of a
           handful of checkpoints in a 30-step SDXL run we read ten scalar summaries of the
@@ -95,7 +95,7 @@ export default function AboutPage() {
           Collection ran on A100 Colab Pro+ under a custom producer–consumer I/O pipeline
           that kept GPU utilisation at 0.98 during the 2.2-hour collection run. Paper
           figures were produced with matplotlib; the webapp is Next.js + Tailwind,
-          deployed on Vercel with images on Cloudflare R2.
+          statically exported and deployed on GitHub Pages, with images on Cloudflare R2.
         </p>
       </section>
     </main>

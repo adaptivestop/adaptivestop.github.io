@@ -39,7 +39,7 @@ export default function SimPage() {
         <p className="text-[13px] text-neutral-600 max-w-3xl">
           Each prompt shows the decoded image at every checkpoint of its evaluated
           schedulers, with the classifier's per-step P(continue) and STOP/CONTINUE
-          decision. The red box marks where SignalStop would halt; darker-bordered tiles
+          decision. The red box marks where AdaptiveStop would halt; darker-bordered tiles
           mark the reference end-of-run image. All 2,419 pooled prompts are Euler-evaluated;
           the 500-prompt paired cross-scheduler subset also has DPM-Solver++ and DDIM panels.
         </p>
@@ -102,7 +102,7 @@ export default function SimPage() {
 
       {/* How to read */}
       <section className="text-[11px] text-neutral-500 pt-4 border-t border-neutral-300 space-y-1">
-        <div>Image borders — <span className="text-[#b02a2a] font-bold">red</span>: SignalStop's chosen stop; <span className="text-neutral-900 font-bold">dark</span>: reference end-of-run; grey: reached; pale: not reached.</div>
+        <div>Image borders — <span className="text-[#b02a2a] font-bold">red</span>: AdaptiveStop's chosen stop; <span className="text-neutral-900 font-bold">dark</span>: reference end-of-run; grey: reached; pale: not reached.</div>
         <div>P(continue) bars — column heights show the classifier's per-step probability; dashed line is the (calibrated) decision threshold t<sup>★</sup>.</div>
       </section>
     </main>

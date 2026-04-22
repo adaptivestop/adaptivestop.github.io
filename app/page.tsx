@@ -21,7 +21,7 @@ export default function Home() {
         </div>
         <p className="max-w-3xl text-[15px] text-neutral-800 pt-3 leading-relaxed">
           Text-to-image diffusion models run a fixed step budget per sample even though
-          individual prompts converge at very different rates. <b>SignalStop</b> reads
+          individual prompts converge at very different rates. <b>AdaptiveStop</b> reads
           ten scalar signals from the U-Net's existing per-step outputs and decides
           <i> per image </i> when to stop denoising. On 2,419 prompts pooled from
           PartiPrompts, MS-COCO, and DrawBench, the classifier meets both primary
@@ -84,7 +84,7 @@ export default function Home() {
             A leave-one-group-out analysis attributes essentially all of the lift over a
             step-position baseline to a single signal group: the
             classifier-free-guidance gap. Removing the CFG-gap pair drops AUC by 0.025;
-            removing any other group changes AUC by at most 0.001. SignalStop is, functionally,
+            removing any other group changes AUC by at most 0.001. AdaptiveStop is, functionally,
             a two-feature <i>CFG-gap probe</i>.
           </div>
           <div className="text-[11px] text-neutral-500">
