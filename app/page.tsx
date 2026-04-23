@@ -16,8 +16,11 @@ export default function Home() {
         <h1 className="text-3xl md:text-4xl font-bold tracking-tight leading-tight">
           Learning to Stop: Process-Signal Early Exit for Diffusion Models
         </h1>
-        <div className="text-sm text-neutral-600">
+        <div className="text-sm text-neutral-700">
           Oli Gurmessa &nbsp;·&nbsp; Dr.&nbsp;Pakeeza Akram
+        </div>
+        <div className="text-[12px] text-neutral-500 tracking-wide">
+          Department of Computer &amp; Data Sciences, University of St.&nbsp;Thomas
         </div>
         <p className="max-w-3xl text-[15px] text-neutral-800 pt-3 leading-relaxed">
           Text-to-image diffusion models run a fixed step budget per sample even though
