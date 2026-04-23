@@ -21,6 +21,9 @@ export default function AboutPage() {
         <div className="text-[15px] leading-relaxed">
           <b>Oli Gurmessa</b> &nbsp;·&nbsp; <b>Dr.&nbsp;Pakeeza Akram</b>
         </div>
+        <div className="text-[12px] text-neutral-600">
+          Department of Computer &amp; Data Sciences, University of St.&nbsp;Thomas
+        </div>
       </section>
 
       <section className="space-y-2">
