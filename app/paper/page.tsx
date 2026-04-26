@@ -39,8 +39,8 @@ export default function PaperPage() {
             className="inline-block border border-neutral-400 px-3 py-1.5 text-sm hover:bg-neutral-100">
             open in new tab
           </a>
-          <span className="text-[11px] text-neutral-500">
-            17 pages · Gurmessa &amp; Akram · v10 evaluation
+          <span className="text-[11px] text-neutral-500 italic">
+            17 pages · author identities removed for double-blind review
           </span>
         </div>
         <div className="bg-white border border-neutral-300 p-2">

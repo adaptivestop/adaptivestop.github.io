@@ -1,28 +1,24 @@
 "use client";
-import { useState } from "react";
 
-const BIBTEX = `@misc{gurmessa2026adaptivestop,
+const BIBTEX_PLACEHOLDER = `@misc{anonymous2026adaptivestop,
   title  = {Learning to Stop: Process-Signal Early Exit for Diffusion Models},
-  author = {Gurmessa, Oli and Akram, Pakeeza},
+  author = {Anonymous},
   year   = {2026},
-  note   = {v10 evaluation — 2499 prompts across PartiPrompts, MS-COCO, DrawBench.}
+  note   = {Under double-blind peer review. Citation will be updated post-review.}
 }`;
 
 export default function AboutPage() {
-  const [copied, setCopied] = useState(false);
   return (
     <main className="max-w-6xl mx-auto px-4 md:px-8 py-8 space-y-8">
       <header className="space-y-1">
         <h1 className="text-2xl font-bold">About</h1>
       </header>
 
-      <section className="bg-white border border-neutral-300 p-5 space-y-1">
-        <div className="text-[11px] uppercase tracking-wider text-neutral-500">Authors</div>
-        <div className="text-[15px] leading-relaxed">
-          <b>Oli Gurmessa</b> &nbsp;·&nbsp; <b>Dr.&nbsp;Pakeeza Akram</b>
-        </div>
-        <div className="text-[12px] text-neutral-600">
-          Department of Computer &amp; Data Sciences, University of St.&nbsp;Thomas
+      <section className="bg-white border border-neutral-300 p-5 space-y-2">
+        <div className="text-[11px] uppercase tracking-wider text-neutral-500">Author identities</div>
+        <div className="text-[14px] leading-relaxed text-neutral-800 italic">
+          Author names and affiliations have been removed from this site and from the paper PDF
+          to support double-blind peer review. They will be added after the review period.
         </div>
       </section>
 
@@ -39,18 +35,14 @@ export default function AboutPage() {
       </section>
 
       <section className="space-y-2">
-        <h2 className="text-lg font-bold">Cite this work</h2>
-        <div className="bg-white border border-neutral-300 p-3 font-mono text-[12px] whitespace-pre-wrap break-words">
-{BIBTEX}
+        <h2 className="text-lg font-bold">Citation</h2>
+        <div className="text-[13px] text-neutral-600">
+          A non-anonymous BibTeX entry will be published once the review period ends. For
+          now, please cite as anonymous:
         </div>
-        <button
-          onClick={() => {
-            navigator.clipboard.writeText(BIBTEX);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 1500);
-          }}
-          className="border border-neutral-400 px-3 py-1 text-sm hover:bg-neutral-100"
-        >{copied ? "copied ✓" : "copy BibTeX"}</button>
+        <div className="bg-white border border-neutral-300 p-3 font-mono text-[12px] whitespace-pre-wrap break-words text-neutral-700">
+{BIBTEX_PLACEHOLDER}
+        </div>
       </section>
 
       <section className="space-y-2">
@@ -58,19 +50,19 @@ export default function AboutPage() {
         <ul className="text-[14px] leading-relaxed text-neutral-800 list-disc pl-5 space-y-1">
           <li>
             <b>Images</b> (per-checkpoint 256×256 JPEGs, 19,994 total across three schedulers)
-            are served from a public Cloudflare R2 bucket; URLs are embedded in the simulator's
-            JSON so any prompt can be rendered without hitting any of our servers.
+            are served from a public CDN bucket; URLs are embedded in the simulator's JSON so
+            any prompt can be rendered without any server-side computation.
           </li>
           <li>
             <b>Signals CSVs</b> (14,994 rows for pooled Euler; 2,500 each for DPM-Solver++ and DDIM)
-            and result JSONs live in the repo under <code>harness_v10/data/</code>.
+            and result JSONs are provided in the supplementary material.
           </li>
           <li>
-            <b>Paper source</b> (<code>main.tex</code>, figures, bibliography) under <code>paper/</code>.
+            <b>Paper source</b> (TeX, figures, bibliography) is included in the supplementary archive.
           </li>
           <li>
             <b>Collection harness</b> (mp-queue I/O pipeline, collector wrapper, signal library)
-            under <code>harness_v10/</code>.
+            is included in the supplementary archive.
           </li>
         </ul>
       </section>
@@ -93,12 +85,12 @@ export default function AboutPage() {
       </section>
 
       <section className="space-y-2">
-        <h2 className="text-lg font-bold">Acknowledgments</h2>
+        <h2 className="text-lg font-bold">Reproducibility</h2>
         <p className="text-[13px] text-neutral-700 max-w-3xl">
-          Collection ran on A100 Colab Pro+ under a custom producer–consumer I/O pipeline
-          that kept GPU utilisation at 0.98 during the 2.2-hour collection run. Paper
-          figures were produced with matplotlib; the webapp is Next.js + Tailwind,
-          statically exported and deployed on GitHub Pages, with images on Cloudflare R2.
+          All headline numbers on this site come from the same CSV/JSON artifacts included in
+          the supplementary archive. The webapp is a static client-side renderer; it performs
+          no computation on the server side. Image traffic flows directly from the visitor's
+          browser to a public CDN bucket, independent of this site's host.
         </p>
       </section>
     </main>

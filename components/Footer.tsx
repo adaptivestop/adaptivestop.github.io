@@ -8,18 +8,12 @@ export default function Footer() {
         {/* Project + paper */}
         <div className="space-y-1 flex-1">
           <div className="text-[13px] font-bold text-neutral-900 tracking-tight">AdaptiveStop</div>
-          <div className="text-[11px] text-neutral-600 leading-snug max-w-sm">
+          <div className="text-[11px] text-neutral-600 leading-snug max-w-md">
             Companion site to <i>Learning to Stop: Process-Signal Early Exit for Diffusion Models</i>.
-            Gurmessa &amp; Akram, 2026.
           </div>
-        </div>
-
-        {/* Affiliation */}
-        <div className="space-y-1">
-          <div className="text-[10px] uppercase tracking-widest text-neutral-500">Affiliation</div>
-          <div className="text-[12px] text-neutral-800 leading-snug">
-            Department of Computer &amp; Data Sciences<br />
-            University of St.&nbsp;Thomas
+          <div className="text-[11px] text-neutral-500 leading-snug italic">
+            Anonymized for double-blind peer review. Author identities, affiliations, and
+            citation will be added after the review period.
           </div>
         </div>
 
