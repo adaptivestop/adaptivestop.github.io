@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "AdaptiveStop — Process-Signal Early Exit for Diffusion Models",
+  title: "AdaptiveStop: Per-Image Early Exit for Diffusion Models via U-Net Process Signals",
   description:
     "Research hub for AdaptiveStop: per-image early exit for SDXL via internal U-Net signals. "
   + "ROC-AUC 0.933 at 32.6% compute savings across 2,419 prompts.",

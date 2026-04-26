@@ -13,7 +13,7 @@ export default function Home() {
       {/* Hero */}
       <section className="space-y-3">
         <h1 className="text-3xl md:text-4xl font-bold tracking-tight leading-tight">
-          Learning to Stop: Process-Signal Early Exit for Diffusion Models
+          AdaptiveStop: Per-Image Early Exit for Diffusion Models via U-Net Process Signals
         </h1>
 
         <p className="max-w-3xl text-[15px] text-neutral-800 pt-3 leading-relaxed">
