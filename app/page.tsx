@@ -12,7 +12,6 @@ export default function Home() {
     <main className="max-w-6xl mx-auto px-4 md:px-8 py-10 space-y-12">
       {/* Hero */}
       <section className="space-y-3">
-        <div className="text-[11px] uppercase tracking-widest text-neutral-500">NeurIPS submission · v10</div>
         <h1 className="text-3xl md:text-4xl font-bold tracking-tight leading-tight">
           Learning to Stop: Process-Signal Early Exit for Diffusion Models
         </h1>

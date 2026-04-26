@@ -8,10 +8,6 @@ export default function Footer() {
         {/* Project + paper */}
         <div className="space-y-1 flex-1">
           <div className="text-[13px] font-bold text-neutral-900 tracking-tight">AdaptiveStop</div>
-          <div className="text-[11px] text-neutral-600 leading-snug max-w-md">
-            Companion site to <i>Learning to Stop: Process-Signal Early Exit for Diffusion Models</i>.
-          </div>
-
         </div>
 
         {/* Links */}
