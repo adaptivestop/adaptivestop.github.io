@@ -11,10 +11,7 @@ export default function Footer() {
           <div className="text-[11px] text-neutral-600 leading-snug max-w-md">
             Companion site to <i>Learning to Stop: Process-Signal Early Exit for Diffusion Models</i>.
           </div>
-          <div className="text-[11px] text-neutral-500 leading-snug italic">
-            Anonymized for double-blind peer review. Author identities, affiliations, and
-            citation will be added after the review period.
-          </div>
+
         </div>
 
         {/* Links */}

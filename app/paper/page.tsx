@@ -40,7 +40,7 @@ export default function PaperPage() {
             open in new tab
           </a>
           <span className="text-[11px] text-neutral-500 italic">
-            17 pages · author identities removed for double-blind review
+            17 pages
           </span>
         </div>
         <div className="bg-white border border-neutral-300 p-2">

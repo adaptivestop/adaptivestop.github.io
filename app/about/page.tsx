@@ -1,10 +1,8 @@
 "use client";
 
-const BIBTEX_PLACEHOLDER = `@misc{anonymous2026adaptivestop,
+const BIBTEX_PLACEHOLDER = `@misc{adaptivestop2026,
   title  = {Learning to Stop: Process-Signal Early Exit for Diffusion Models},
-  author = {Anonymous},
-  year   = {2026},
-  note   = {Under double-blind peer review. Citation will be updated post-review.}
+  year   = {2026}
 }`;
 
 export default function AboutPage() {
@@ -14,13 +12,7 @@ export default function AboutPage() {
         <h1 className="text-2xl font-bold">About</h1>
       </header>
 
-      <section className="bg-white border border-neutral-300 p-5 space-y-2">
-        <div className="text-[11px] uppercase tracking-wider text-neutral-500">Author identities</div>
-        <div className="text-[14px] leading-relaxed text-neutral-800 italic">
-          Author names and affiliations have been removed from this site and from the paper PDF
-          to support double-blind peer review. They will be added after the review period.
-        </div>
-      </section>
+
 
       <section className="space-y-2">
         <h2 className="text-lg font-bold">What is AdaptiveStop?</h2>
@@ -36,10 +28,6 @@ export default function AboutPage() {
 
       <section className="space-y-2">
         <h2 className="text-lg font-bold">Citation</h2>
-        <div className="text-[13px] text-neutral-600">
-          A non-anonymous BibTeX entry will be published once the review period ends. For
-          now, please cite as anonymous:
-        </div>
         <div className="bg-white border border-neutral-300 p-3 font-mono text-[12px] whitespace-pre-wrap break-words text-neutral-700">
 {BIBTEX_PLACEHOLDER}
         </div>

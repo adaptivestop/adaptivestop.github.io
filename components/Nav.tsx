@@ -39,9 +39,7 @@ export default function Nav() {
             );
           })}
         </ul>
-        <div className="ml-auto text-[10px] text-neutral-500 hidden md:block tracking-wide italic">
-          Anonymous submission · double-blind review
-        </div>
+
       </div>
     </nav>
   );
