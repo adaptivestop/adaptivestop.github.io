@@ -1,9 +1,6 @@
 "use client";
 
-const BIBTEX_PLACEHOLDER = `@misc{adaptivestop2026,
-  title  = {Learning to Stop: Process-Signal Early Exit for Diffusion Models},
-  year   = {2026}
-}`;
+
 
 export default function AboutPage() {
   return (
@@ -26,12 +23,7 @@ export default function AboutPage() {
         </p>
       </section>
 
-      <section className="space-y-2">
-        <h2 className="text-lg font-bold">Citation</h2>
-        <div className="bg-white border border-neutral-300 p-3 font-mono text-[12px] whitespace-pre-wrap break-words text-neutral-700">
-{BIBTEX_PLACEHOLDER}
-        </div>
-      </section>
+
 
       <section className="space-y-2">
         <h2 className="text-lg font-bold">Data &amp; artifacts</h2>
