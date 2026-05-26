@@ -1,10 +1,10 @@
-# AdaptiveStop — research hub
+# AdaptiveStop — simulator
 
-Next.js 14 webapp that serves the AdaptiveStop paper's full research artefact: the
-compiled PDF, all 11 figures, the per-prompt simulator (2,419 Euler-evaluated
-prompts with 476 also paired across DPM-Solver++ and DDIM), interactive ablation
-widgets, and the pre-registered success-criteria scorecard. Greyscale-first,
-statically exported, deployed to GitHub Pages.
+Next.js 14 webapp serving the AdaptiveStop per-prompt simulator: 2,419
+Euler-evaluated prompts (476 also paired across DPM-Solver++ and DDIM), each
+showing the decoded image at every checkpoint with the classifier's per-step
+STOP/CONTINUE decision. Greyscale-first, statically exported, deployed to GitHub
+Pages.
 
 **Live:** <https://adaptivestop.github.io>
 
@@ -12,21 +12,14 @@ statically exported, deployed to GitHub Pages.
 
 | path | what |
 |------|------|
-| `/`          | landing page, headline metrics, mechanistic callout |
-| `/sim`       | per-prompt simulator: three-scheduler image grid with per-step classifier decisions |
-| `/ablations` | τ-sweep slider, leave-one-group-out ΔAUC, LR coefficients, per-corpus table |
-| `/results`   | pre-registered criteria, v9-cohort replication, cross-scheduler transfer table + gates |
-| `/paper`     | PDF viewer + figure gallery (11 figures) |
-| `/about`     | authors, methodology summary, BibTeX copy-to-clipboard |
+| `/` | per-prompt simulator: three-scheduler image grid with per-step classifier decisions |
 
 ## Data layer
 
-The webapp reads four JSON files from `public/data/`:
+The webapp reads two JSON files from `public/data/`:
 
-- **`core.json`** — meta, headline numbers, criteria, v9-replication deltas
+- **`core.json`** — meta, headline numbers
 - **`trajectories.json`** — 2,419 prompts × signals/pickscore/pred/image-URL (476 of them also carry DPM-Solver++ and DDIM panels)
-- **`ablations.json`** — τ sweep, group LOO, per-corpus, LR coefficients
-- **`transfer.json`** — cross-scheduler uncalibrated + calibrated metrics + gates
 
 Images (19,994 JPEGs at 256×256) live in a public Cloudflare R2 bucket.
 `trajectories.json` embeds the R2 URLs directly so no server round-trip is needed.
@@ -61,8 +54,8 @@ Requirements (one-time):
 2. **Settings → Pages → Source** is set to **GitHub Actions**.
 
 Then every `git push origin main` rebuilds the site. Deployment is tiny
-(~12 MB: code + JSON + figure PDFs + paper PDF). All image traffic goes to
-Cloudflare R2, not GH Pages — zero bandwidth impact.
+(code + JSON only). All image traffic goes to Cloudflare R2, not GH Pages —
+zero bandwidth impact.
 
 ## Secrets
 

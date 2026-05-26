@@ -1,107 +1,231 @@
 "use client";
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import type { Core } from "@/lib/types";
-import StatCard from "@/components/StatCard";
+import { useEffect, useMemo, useState } from "react";
+import type { Core, Trajectories, Prompt } from "@/lib/types";
+import SchedulerPanel from "@/components/SchedulerPanel";
+import PromptList from "@/components/PromptList";
+
+type SortKey = "default" | "stop_asc" | "stop_desc" | "qloss_desc" | "corpus";
+type StopBucket = "any" | "early" | "mid" | "late" | "never";
 
 export default function Home() {
-  const [core, setCore] = useState<Core | null>(null);
-  useEffect(() => { fetch("/data/core.json").then(r => r.json()).then(setCore); }, []);
+  const [core, setCore]    = useState<Core | null>(null);
+  const [data, setData]    = useState<Trajectories | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  const [query, setQuery]      = useState("");
+  const [corpus, setCorpus]    = useState<string>("All");
+  const [onlyMulti, setOnlyMulti] = useState(false);
+  const [stopBucket, setStopBucket] = useState<StopBucket>("any");
+  const [sort, setSort]        = useState<SortKey>("default");
+
+  useEffect(() => {
+    fetch("/data/core.json").then(r => r.json()).then(setCore);
+    fetch("/data/trajectories.json").then(r => r.json()).then(setData);
+  }, []);
+
+  const filtered = useMemo(() => {
+    if (!data) return [] as Prompt[];
+    const q = query.trim().toLowerCase();
+    const inBucket = (p: Prompt): boolean => {
+      const s = p.euler?.stop_step;
+      if (s === undefined) return stopBucket === "any";
+      switch (stopBucket) {
+        case "any":   return true;
+        case "early": return s <= 15;
+        case "mid":   return s > 15 && s < 30;
+        case "late":  return s >= 20 && s < 30;
+        case "never": return s === 30;
+      }
+    };
+    let rows = data.prompts.filter(p => {
+      if (corpus !== "All" && p.corpus !== corpus) return false;
+      if (onlyMulti && !(p.dpm && p.ddim)) return false;
+      if (!inBucket(p)) return false;
+      if (!q) return true;
+      return p.text.toLowerCase().includes(q) || p.id.toLowerCase().includes(q);
+    });
+
+    switch (sort) {
+      case "stop_asc":
+        rows = [...rows].sort((a, b) => (a.euler?.stop_step ?? 99) - (b.euler?.stop_step ?? 99));
+        break;
+      case "stop_desc":
+        rows = [...rows].sort((a, b) => (b.euler?.stop_step ?? -1) - (a.euler?.stop_step ?? -1));
+        break;
+      case "qloss_desc":
+        rows = [...rows].sort((a, b) => (b.euler?.quality_loss ?? -1) - (a.euler?.quality_loss ?? -1));
+        break;
+      case "corpus":
+        rows = [...rows].sort((a, b) => a.corpus.localeCompare(b.corpus) || a.id.localeCompare(b.id));
+        break;
+      default: break;
+    }
+    return rows;
+  }, [data, query, corpus, onlyMulti, stopBucket, sort]);
+
+  // Keep the selected prompt valid as filters change; if not in current list, pick first.
+  useEffect(() => {
+    if (filtered.length === 0) return;
+    if (!selectedId || !filtered.find(p => p.id === selectedId)) {
+      setSelectedId(filtered[0].id);
+    }
+  }, [filtered, selectedId]);
+
+  const selected = useMemo(
+    () => (filtered.find(p => p.id === selectedId) ?? filtered[0] ?? null),
+    [filtered, selectedId]
+  );
+
+  const pickRandom = () => {
+    if (filtered.length === 0) return;
+    const r = filtered[Math.floor(Math.random() * filtered.length)];
+    setSelectedId(r.id);
+  };
+
+  if (!core || !data) return <main className="p-8 text-neutral-600">loading…</main>;
 
   return (
-    <main className="max-w-6xl mx-auto px-4 md:px-8 py-10 space-y-12">
-      {/* Hero */}
-      <section className="space-y-3">
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight leading-tight">
-          AdaptiveStop: Per-Image Early Exit for Diffusion Models via U-Net Process Signals
-        </h1>
-
-        <p className="max-w-3xl text-[15px] text-neutral-800 pt-3 leading-relaxed">
-          Text-to-image diffusion models run a fixed step budget per sample even though
-          individual prompts converge at very different rates. <b>AdaptiveStop</b> reads
-          ten scalar signals from the U-Net's existing per-step outputs and decides
-          <i> per image </i> when to stop denoising. On 2,419 prompts pooled from
-          PartiPrompts, MS-COCO, and DrawBench, the classifier meets both primary
-          pre-registered targets: ROC-AUC 0.933 and 32.6% compute savings.
+    <main className="max-w-7xl mx-auto px-4 md:px-8 py-8 space-y-6">
+      {/* Page header */}
+      <header className="space-y-1">
+        <h1 className="text-2xl font-bold">Simulator</h1>
+        <p className="text-[13px] text-neutral-600 max-w-3xl">
+          Each prompt shows the decoded image at every checkpoint with the classifier's
+          per-step P(continue) and STOP/CONTINUE decision. The red box marks where
+          AdaptiveStop would halt; darker-bordered tiles mark the reference end-of-run
+          image. All 2,419 pooled prompts are Euler-evaluated; the 500-prompt paired
+          cross-scheduler subset also has DPM-Solver++ and DDIM panels.
         </p>
+      </header>
+
+      {/* Filter / sort toolbar */}
+      <section className="bg-white border border-neutral-300 p-3 flex flex-wrap items-center gap-2">
+        <input
+          value={query}
+          onChange={e => setQuery(e.target.value)}
+          placeholder="search prompt text or ID…"
+          className="flex-1 min-w-[220px] border border-neutral-400 bg-white px-3 py-1.5 text-sm"
+        />
+
+        <Control label="corpus">
+          <select
+            value={corpus}
+            onChange={e => setCorpus(e.target.value)}
+            className="border border-neutral-400 bg-white px-2 py-1 text-sm"
+          >
+            {["All", "PartiPrompts", "COCO", "DrawBench"].map(c =>
+              <option key={c} value={c}>{c}</option>
+            )}
+          </select>
+        </Control>
+
+        <Control label="stop step">
+          <select
+            value={stopBucket}
+            onChange={e => setStopBucket(e.target.value as StopBucket)}
+            className="border border-neutral-400 bg-white px-2 py-1 text-sm"
+            title="Filter by where AdaptiveStop chose to halt (Euler, 30-step)"
+          >
+            <option value="any">any</option>
+            <option value="early">early (≤15)</option>
+            <option value="mid">mid (16–24)</option>
+            <option value="late">late (20–29)</option>
+            <option value="never">never (=30)</option>
+          </select>
+        </Control>
+
+        <Control label="sort">
+          <select
+            value={sort}
+            onChange={e => setSort(e.target.value as SortKey)}
+            className="border border-neutral-400 bg-white px-2 py-1 text-sm"
+          >
+            <option value="default">default</option>
+            <option value="stop_asc">stop step ↑ (earliest first)</option>
+            <option value="stop_desc">stop step ↓ (latest first)</option>
+            <option value="qloss_desc">quality loss ↓ (worst first)</option>
+            <option value="corpus">corpus</option>
+          </select>
+        </Control>
+
+        <label className="flex items-center gap-1.5 text-xs text-neutral-700 pl-1 border-l border-neutral-300 ml-1">
+          <input
+            type="checkbox"
+            checked={onlyMulti}
+            onChange={e => setOnlyMulti(e.target.checked)}
+            className="accent-neutral-900"
+          />
+          cross-scheduler only
+        </label>
+
+        <button
+          onClick={pickRandom}
+          className="border border-neutral-400 px-3 py-1 text-sm hover:bg-neutral-100 ml-auto"
+          title="Jump to a random prompt from the current filter"
+        >
+          ⤳ random
+        </button>
+        <span className="text-xs text-neutral-500 tabular-nums">
+          {filtered.length.toLocaleString()} prompt{filtered.length === 1 ? "" : "s"}
+        </span>
       </section>
 
-      {/* Headline stats */}
-      {core && (
-        <section>
-          <div className="text-[11px] uppercase tracking-wider text-neutral-500 mb-2">Headline (τ=0.80, 5-fold OOF)</div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <StatCard
-              label="ROC-AUC"
-              value={core.headline.roc_auc.toFixed(3)}
-              ci={core.headline.roc_auc_ci95 ?? undefined}
-              accent
-            />
-            <StatCard
-              label="F₁(STOP)"
-              value={core.headline.f1_stop.toFixed(3)}
-              ci={core.headline.f1_stop_ci95 ?? undefined}
-            />
-            <StatCard
-              label="Compute savings"
-              value={`${core.headline.savings_pct.toFixed(1)}%`}
-              sub={`mean stop step ${core.headline.avg_stop.toFixed(1)} / 30`}
-            />
-            <StatCard
-              label="Mean q-loss"
-              value={core.headline.mean_qloss.toFixed(2)}
-              sub={`p90 = ${core.headline.p90_qloss.toFixed(2)}, p95 = ${core.headline.p95_qloss.toFixed(2)}`}
-            />
-          </div>
-        </section>
-      )}
+      {/* Two-column: list + selected detail */}
+      <section className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-4">
+        <PromptList
+          prompts={filtered}
+          selectedId={selected?.id ?? null}
+          onSelect={setSelectedId}
+        />
 
-      {/* Section tiles */}
-      <section className="space-y-2">
-        <div className="text-[11px] uppercase tracking-wider text-neutral-500">Research hub</div>
-        <div className="grid md:grid-cols-3 gap-3">
-          <Tile href="/sim" title="Simulator"
-            desc="Browse 500 prompts across three schedulers. Per-step decoded images, signals, and the classifier's per-checkpoint STOP/CONTINUE decision." />
-          <Tile href="/ablations" title="Ablations"
-            desc="Threshold sensitivity, leave-one-group-out, and standardised LR coefficients on the pooled 2,419-prompt corpus." />
-          <Tile href="/results" title="Results"
-            desc="Pre-registered success criteria, v9-cohort replication, per-corpus external validity, cross-scheduler transfer." />
-          <Tile href="/paper" title="Paper"
-            desc="PDF of the manuscript and gallery of the 11 figures." />
-          <Tile href="/about" title="About"
-            desc="Authors, citation, and source links." />
+        {selected ? (
+          <div className="space-y-4">
+            <div className="bg-white border border-neutral-300 p-4 space-y-1">
+              <div className="text-[10px] uppercase tracking-wider text-neutral-500">
+                {selected.corpus} &nbsp;·&nbsp; {selected.id}
+                {selected.category ? " · " + selected.category : ""}
+              </div>
+              <div className="text-[15px] text-neutral-900 leading-snug">{selected.text}</div>
+            </div>
+
+            {selected.euler && <SchedulerPanel name="Euler (30 steps)"            keyName="euler" trajectory={selected.euler} />}
+            {selected.dpm   && <SchedulerPanel name="DPM-Solver++ 2M (20 steps)"  keyName="dpm"   trajectory={selected.dpm} />}
+            {selected.ddim  && <SchedulerPanel name="DDIM (50 steps)"             keyName="ddim"  trajectory={selected.ddim} />}
+          </div>
+        ) : (
+          <div className="bg-white border border-neutral-300 p-6 text-neutral-500 text-sm">
+            No prompt matches the current filters.
+          </div>
+        )}
+      </section>
+
+      {/* How to read */}
+      <section className="text-[11px] text-neutral-500 pt-3 border-t border-neutral-300 space-y-1">
+        <div>
+          <span className="inline-block w-[14px] h-[14px] bg-[#b02a2a] align-middle"/> early stop (≤15) &nbsp;·&nbsp;
+          <span className="inline-block w-[14px] h-[14px] bg-neutral-600 align-middle"/> mid (16–24) &nbsp;·&nbsp;
+          <span className="inline-block w-[14px] h-[14px] bg-neutral-400 align-middle"/> late (25–29) &nbsp;·&nbsp;
+          <span className="inline-block w-[14px] h-[14px] bg-neutral-300 align-middle"/> never (30)
+        </div>
+        <div>
+          Image borders — <span className="text-[#b02a2a] font-bold">red</span>: AdaptiveStop's chosen stop;
+          <span className="text-neutral-900 font-bold"> dark</span>: reference end-of-run;
+          grey: reached; pale: not reached.
+        </div>
+        <div>
+          P(continue) bars — column heights show the classifier's per-step probability;
+          dashed line is the (calibrated) decision threshold t<sup>★</sup>.
         </div>
       </section>
-
-      {/* Mechanistic callout */}
-      {core && (
-        <section className="bg-white border border-neutral-300 p-5 space-y-2">
-          <div className="text-[11px] uppercase tracking-wider text-neutral-500">Mechanistic finding</div>
-          <div className="text-[15px] leading-relaxed text-neutral-900">
-            A leave-one-group-out analysis attributes essentially all of the lift over a
-            step-position baseline to a single signal group: the
-            classifier-free-guidance gap. Removing the CFG-gap pair drops AUC by 0.025;
-            removing any other group changes AUC by at most 0.001. AdaptiveStop is, functionally,
-            a two-feature <i>CFG-gap probe</i>.
-          </div>
-          <div className="text-[11px] text-neutral-500">
-            Cross-scheduler zero-shot: ΔAUC on DDIM = {core.cross_scheduler_summary.delta_auc_ddim.toFixed(4)},
-            on DPM-Solver++ = {core.cross_scheduler_summary.delta_auc_dpm.toFixed(4)}.
-          </div>
-        </section>
-      )}
     </main>
   );
 }
 
-function Tile({ href, title, desc }: { href: string; title: string; desc: string }) {
+function Control({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <Link
-      href={href}
-      className="bg-white border border-neutral-300 hover:border-neutral-900 transition p-4 block"
-    >
-      <div className="text-lg font-bold">{title} <span className="text-neutral-400">→</span></div>
-      <div className="text-[13px] text-neutral-600 mt-1 leading-relaxed">{desc}</div>
-    </Link>
+    <label className="flex items-center gap-1 text-xs text-neutral-600">
+      <span className="uppercase tracking-wider text-[10px]">{label}</span>
+      {children}
+    </label>
   );
 }
